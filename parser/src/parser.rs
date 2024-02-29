@@ -33,21 +33,21 @@ fn parse_nothing(line: &Line) -> Option<Data> {
 }
 
 fn parse_set(line: &Line) -> Option<Data> {
-    let is_numeric = line.iter().find(|p| !is_numeric(&p)).is_none();
+    let is_numeric = !line.iter().any(|p| !is_numeric(p));
     if !is_numeric {
         return None;
     }
     Some(Data::Set(if line.len() == 2 {
         Set {
-            number: parse_number(&line[0]),
-            reps: parse_number(&line[1]),
+            number: parse_number(line[0]),
+            reps: parse_number(line[1]),
             kilos: None,
         }
     } else {
         Set {
-            number: parse_number(&line[0]),
-            kilos: parse_number(&line[1]),
-            reps: parse_number(&line[2]),
+            number: parse_number(line[0]),
+            kilos: parse_number(line[1]),
+            reps: parse_number(line[2]),
         }
     }))
 }
@@ -59,8 +59,7 @@ fn parse_exercise(line: &Line) -> Option<Data> {
 
     const NAME_REGEX: LazyCell<Regex> = LazyCell::new(|| Regex::new(r"^\d\..*").unwrap());
 
-    let name = line
-        .get(0)
+    let name = line.first()
         .map(|first| {
             if NAME_REGEX.is_match(first) {
                 &first[2..]
@@ -86,7 +85,7 @@ fn parse_day(line: &Line) -> Option<Data> {
 
     Some(Data::Day(Day {
         info: Some(DayInfo {
-            duration: parse_duration(&line[2]),
+            duration: parse_duration(line[2]),
             name: line[0].into(),
             date,
         }),
@@ -129,9 +128,7 @@ fn parse_duration(input: &str) -> Option<Duration> {
 }
 
 fn is_numeric(s: &str) -> bool {
-    s.chars()
-        .find(|&c| !c.is_numeric() && c != '-' && c != ',' && c != '+')
-        .is_none()
+    !s.chars().any(|c| !c.is_numeric() && c != '-' && c != ',' && c != '+')
 }
 
 fn parse_number(s: &str) -> Option<f32> {

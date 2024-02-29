@@ -3,7 +3,7 @@ use poem::{
     handler,
     listener::TcpListener,
     post,
-    web::{Json, Path},
+    web::{Json},
     Route, Server,
 };
 

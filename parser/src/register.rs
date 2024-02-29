@@ -7,13 +7,19 @@ pub struct Register {
     pub days: Vec<Day>,
 }
 
+impl Default for Register {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Register {
     pub fn new() -> Self {
         Self { days: Vec::new() }
     }
 
     fn last_day(&mut self) -> &mut Day {
-        if self.days.len() == 0 {
+        if self.days.is_empty() {
             self.days.push(Day {
                 info: None,
                 exercises: Vec::new(),
@@ -28,15 +34,12 @@ impl Register {
     }
 
     pub fn push_exercise(&mut self, exercise: Exercise) {
-        if let None = exercise.name {
-            dbg!("what");
-        }
         self.last_day().exercises.push(exercise);
     }
 
     pub fn push_set(&mut self, set: Set) {
         let day = self.last_day();
-        if day.exercises.len() == 0 {
+        if day.exercises.is_empty() {
             day.exercises.push(Exercise {
                 sets: Vec::new(),
                 name: None,
