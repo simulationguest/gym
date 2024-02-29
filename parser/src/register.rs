@@ -1,5 +1,8 @@
+use serde::Serialize;
+
 use crate::data::*;
 
+#[derive(Debug, Clone, Serialize)]
 pub struct Register {
     pub days: Vec<Day>,
 }
@@ -43,17 +46,15 @@ impl Register {
         day.exercises[last].sets.push(set);
     }
 
-    pub fn push_data(&mut self, iter: impl Iterator<Item = Data>) {
-        for line in iter {
-            match line {
-                Data::Day(day) => self.push_day(day),
-                Data::Exercise(exercise) => self.push_exercise(exercise),
-                Data::Set(set) => self.push_set(set),
-                Data::Unknown => {
-                    dbg!("unknown line");
-                }
-                Data::Nothing => {}
+    pub fn push_data(&mut self, data: Data) {
+        match data {
+            Data::Day(day) => self.push_day(day),
+            Data::Exercise(exercise) => self.push_exercise(exercise),
+            Data::Set(set) => self.push_set(set),
+            Data::Unknown => {
+                dbg!("unknown line");
             }
+            Data::Nothing => {}
         }
     }
 }

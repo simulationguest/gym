@@ -2,7 +2,7 @@ use chrono::{Duration, NaiveDateTime};
 use serde::Serialize;
 use serde_with::DurationSeconds;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Data {
     Day(Day),
     Exercise(Exercise),
@@ -11,14 +11,14 @@ pub enum Data {
     Nothing,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Clone, Serialize)]
 pub struct Day {
     pub info: Option<DayInfo>,
     pub exercises: Vec<Exercise>,
 }
 
 #[serde_with::serde_as]
-#[derive(Debug, Serialize)]
+#[derive(Debug, Clone, Serialize)]
 pub struct DayInfo {
     pub name: String,
     pub date: Result<NaiveDateTime, String>,
@@ -26,13 +26,13 @@ pub struct DayInfo {
     pub duration: Option<Duration>,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Clone, Serialize)]
 pub struct Exercise {
     pub sets: Vec<Set>,
     pub name: Option<String>,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Clone, Serialize)]
 pub struct Set {
     pub number: Option<f32>,
     pub kilos: Option<f32>,
